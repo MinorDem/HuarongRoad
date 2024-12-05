@@ -1,0 +1,115 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f8f4e3; /* Light beige for background */
+    color: #333; /* Dark gray for text */
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 240px); /* Adjust grid for tiles */
+    grid-gap: 10px; /* Space between tiles */
+}
+
+.tile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #a3d8f4, #87ceeb); /* Light blue gradient */
+    color: #fff; /* White text for contrast */
+    font-size: 24px; /* Base font size */
+    font-weight: bold;
+    border-radius: 12px; /* Rounded corners */
+    width: 240px;
+    height: 120px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tile:hover {
+    transform: scale(1.05); /* Slight zoom on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.tile .name {
+    font-size: 28px; /* Smaller font for names */
+    margin-bottom: 5px; /* Space between name and number */
+}
+
+.tile .number {
+    font-size: 20px; /* Larger font for numbers */
+}
+
+.empty {
+    background-color: transparent; /* Remove the background */
+    border: none; /* Remove any border */
+    pointer-events: none; /* Disable clicks */
+    box-shadow: none; /* Remove shadow */
+    cursor: default; /* Default cursor */
+    width: 240px; /* Match tile width */
+    height: 120px; /* Match tile height */
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 36px; /* Larger title font */
+    color: #333;
+    margin: 0;
+}
+
+.controls {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.timer {
+    font-size: 36px; /* Larger font for timer */
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #555; /* Medium gray for text */
+}
+
+#resetButton {
+    font-size: 24px; /* Larger button text */
+    padding: 10px 20px; /* Increase button size */
+    border: none;
+    background-color: #68b684; /* Light green for button */
+    color: #fff; /* White text */
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#resetButton:hover {
+    background-color: #5ca374; /* Slightly darker green on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+footer {
+    width: 100%; /* Make footer span the entire width */
+    text-align: center;
+    font-size: 14px;
+    color: #555; /* Medium gray for text */
+    margin-top: auto; /* Push footer to the bottom */
+    padding: 10px 0; /* Add padding for spacing */
+    background-color: #f8f4e3; /* Match the background */
+}
+
+footer hr {
+    border: 0;
+    border-top: 1px solid #000; /* Black line */
+    width: 90%; /* Make the line shorter than the full width */
+    margin: 0 auto 10px auto; /* Center the line and add spacing */
+}
