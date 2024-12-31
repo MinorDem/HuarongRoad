@@ -12,16 +12,19 @@ interface TimerProps {
 export interface TimerRef {
   getTime: () => number;
   setTime: (time: number) => void;
+  startTime: () => void;
 }
 
 export const Timer = forwardRef<TimerRef, TimerProps>(({ isRunning }, ref) => {
   const [timeElapsed, setTimeElapsed] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
-    const startTime = Date.now() - timeElapsed * 1000;
 
-    if (isRunning) {
+    if (isRunning && hasStarted) {
+      const startTime = Date.now() - timeElapsed * 1000;
+
       timer = setInterval(() => {
         setTimeElapsed((Date.now() - startTime) / 1000);
       }, 100);
@@ -30,11 +33,15 @@ export const Timer = forwardRef<TimerRef, TimerProps>(({ isRunning }, ref) => {
     return () => {
       if (timer) clearInterval(timer);
     };
-  }, [isRunning, timeElapsed]);
+  }, [isRunning, hasStarted, timeElapsed]);
 
   useImperativeHandle(ref, () => ({
     getTime: () => timeElapsed,
     setTime: (time: number) => setTimeElapsed(time),
+    startTime: () => {
+      setTimeElapsed(0);
+      setHasStarted(true);
+    },
   }));
 
   const formatTime = (totalSeconds: number): string => {

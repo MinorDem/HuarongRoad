@@ -7,14 +7,16 @@ import { GameControls } from "@/components/ui/gameControls";
 import { Board } from "@/components/ui/board";
 import { VictoryDialog } from "@/components/ui/victoryDialog";
 import { LeaderboardDialog } from "@/components/ui/leaderboardDialog";
-import { BoardI, LeaderboardEntryI, testState, UserI } from "@/types";
+import { BoardI, LeaderboardEntryI, UserI } from "@/types";
 import { findEmptyTile, checkWin, shuffleBoard } from "@/utils/shuffleUtils";
+import { TourGuide } from "@/components/ui/tourGuide";
 
 export default function SlidingPuzzle() {
   const [board, setBoard] = useState<BoardI>([]);
   const [isGameWon, setIsGameWon] = useState(false);
   const [showVictoryDialog, setShowVictoryDialog] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [showTour, setShowTour] = useState(false);
   const [username, setUsername] = useState("");
   const [currentUser, setCurrentUser] = useState<UserI | null>(null);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntryI[]>([]);
@@ -25,8 +27,11 @@ export default function SlidingPuzzle() {
 
   useEffect(() => {
     const savedUser = sessionStorage.getItem("puzzleUser");
-    if (savedUser) {
+    if (!savedUser) {
+      setShowTour(true);
+    } else {
       setCurrentUser(JSON.parse(savedUser));
+      resetGame();
     }
   }, []);
 
@@ -52,10 +57,16 @@ export default function SlidingPuzzle() {
   );
 
   const resetGame = useCallback(() => {
-    timerRef.current.setTime(0);
+    timerRef.current?.setTime(0);
     setBoard(shuffleBoard());
     setIsGameWon(false);
     setShowVictoryDialog(false);
+  }, []);
+
+  const startGame = useCallback(() => {
+    setBoard(shuffleBoard());
+    setShowTour(false);
+    timerRef.current?.startTime();
   }, []);
 
   const moveTile = useCallback(
@@ -87,8 +98,7 @@ export default function SlidingPuzzle() {
   );
 
   useEffect(() => {
-    if (!board.length) {
-      resetGame();
+    if (!board.length && !showTour) {
       const savedLeaderboard = localStorage.getItem("puzzleLeaderboard");
       if (savedLeaderboard) {
         const parsedLeaderboard = JSON.parse(savedLeaderboard);
@@ -102,7 +112,7 @@ export default function SlidingPuzzle() {
         }
       }
     }
-  }, [board, currentUser, calculateUserRank, resetGame]);
+  }, [board, currentUser, calculateUserRank, showTour]);
 
   const updateLeaderboard = (newLeaderboard: LeaderboardEntryI[]) => {
     setLeaderboard((prevLeaderboard) => {
@@ -146,7 +156,10 @@ export default function SlidingPuzzle() {
 
   useEffect(() => {
     loadLeaderboard();
-  }, [loadLeaderboard]);
+    if (currentUser && !showTour) {
+      timerRef.current?.startTime(); // Start timer if user exists and tour is not shown
+    }
+  }, [loadLeaderboard, currentUser, showTour]);
 
   const handleAddToLeaderboard = useCallback(
     async (isNewUser = false) => {
@@ -198,11 +211,19 @@ export default function SlidingPuzzle() {
         </h1>
       </header>
 
+      <TourGuide onComplete={startGame} open={showTour} />
+
       <main className="flex-1 flex flex-col items-center">
         <div className="controls text-center mb-8">
-          <Timer isRunning={!isGameWon} ref={timerRef} />
+          <Timer isRunning={!isGameWon && board.length > 0} ref={timerRef} />
           <GameControls
-            resetLabel={isGameWon ? "Play Again" : "Reset"}
+            resetLabel={
+              board.length === 0
+                ? "Start Game"
+                : isGameWon
+                ? "Play Again"
+                : "Reset"
+            }
             onReset={resetGame}
             onShowLeaderboard={() => setShowLeaderboard(true)}
           />
