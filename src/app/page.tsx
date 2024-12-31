@@ -58,6 +58,7 @@ export default function SlidingPuzzle() {
   }, []);
 
   const resetGame = useCallback(() => {
+    timerRef.current.setTime(0);
     setBoard(testState);
     setIsGameWon(false);
     setShowVictoryDialog(false);
