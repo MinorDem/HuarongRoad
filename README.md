@@ -1,4 +1,5 @@
 # HuarongRoad
+
 Sliding Puzzle Game
 A classic sliding puzzle game built using HTML, CSS, and JavaScript. Challenge yourself to rearrange the tiles in numerical order by sliding them into the empty space. This game is perfect for enhancing problem-solving skills while having fun!
 
@@ -14,7 +15,6 @@ Rearrange the tiles to their original order (1 to 8) by sliding them into the em
 Aim to complete the puzzle in the shortest time possible.
 Use the Reset button to restart the game.
 
-
 Files in the Project
 index.html: The structure of the game.
 styles.css: The styling for the game, including layout and design.
@@ -29,6 +29,18 @@ Future Enhancements
 Add a leaderboard using AWS DynamoDB to store player scores.
 Implement additional grid sizes (e.g., 4x4, 5x5).
 Create animations for tile movements.
+
+## Setting Up AWS Leaderboard
+
+### 1. Configure Environment Variables
+
+Create a `.env` file in the project root and add the following:
+
+```env
+AWS_REGION=your-region
+AWS_ACCESS_KEY_ID=your-access-key-id
+AWS_SECRET_ACCESS_KEY=your-secret-access-key
+```
 
 Contributing
 Contributions are welcome! If you'd like to improve the game or report a bug, feel free to open an issue or submit a pull request.
