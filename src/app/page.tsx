@@ -8,7 +8,7 @@ import { Board } from "@/components/ui/board";
 import { VictoryDialog } from "@/components/ui/victoryDialog";
 import { LeaderboardDialog } from "@/components/ui/leaderboardDialog";
 import { BoardI, LeaderboardEntryI, testState, UserI } from "@/types";
-import { findEmptyTile, checkWin } from "@/utils/shuffleUtils";
+import { findEmptyTile, checkWin, shuffleBoard } from "@/utils/shuffleUtils";
 
 export default function SlidingPuzzle() {
   const [board, setBoard] = useState<BoardI>([]);
@@ -51,15 +51,9 @@ export default function SlidingPuzzle() {
     []
   );
 
-  const handleReplayGame = useCallback(() => {
-    setShowVictoryDialog(false);
-    setBoard(testState);
-    setIsGameWon(false);
-  }, []);
-
   const resetGame = useCallback(() => {
     timerRef.current.setTime(0);
-    setBoard(testState);
+    setBoard(shuffleBoard());
     setIsGameWon(false);
     setShowVictoryDialog(false);
   }, []);
@@ -209,7 +203,7 @@ export default function SlidingPuzzle() {
           <Timer isRunning={!isGameWon} ref={timerRef} />
           <GameControls
             resetLabel={isGameWon ? "Play Again" : "Reset"}
-            onReset={isGameWon ? handleReplayGame : resetGame}
+            onReset={resetGame}
             onShowLeaderboard={() => setShowLeaderboard(true)}
           />
         </div>
@@ -227,7 +221,7 @@ export default function SlidingPuzzle() {
         leaderboard={leaderboard}
         onSaveScore={() => handleAddToLeaderboard(true)}
         onUpdateScore={() => handleAddToLeaderboard(false)}
-        onPlayAgain={handleReplayGame}
+        onPlayAgain={resetGame}
       />
 
       <LeaderboardDialog
